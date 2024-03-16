@@ -15,7 +15,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <div class="box-body">
-                        <form role="form" action="<?php echo site_url('admin/feemaster/assign/' . $id) ?>" method="post" class="row">
+                        <form role="form" action="<?php echo site_url('admin/additionalfeemaster/assign/' . $id) ?>" method="post" class="row">
                             <?php echo $this->customlib->getCSRF(); ?>
                             <div class="col-sm-3">
                                 <div class="form-group">

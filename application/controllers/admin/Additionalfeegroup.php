@@ -28,6 +28,7 @@ class Additionalfeegroup extends Admin_Controller
                 array('check_exists', array($this->additionalfeegroup_model, 'check_exists')),
             )
         );
+
         if ($this->form_validation->run() == false) {
 
         } else {

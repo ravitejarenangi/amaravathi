@@ -20,9 +20,9 @@ class Additionalfeesessiongroup_model extends MY_Model
         //=======================Code Start===========================
         $parentid                     = $this->group_exists($data['fee_groups_id']);
         $data['fee_session_group_id'] = $parentid;
-        $this->db->insert('fee_groups_feetype', $data);
+        $this->db->insert('additionalfee_groups_feetype', $data);
         $id        = $this->db->insert_id();
-        $message   = INSERT_RECORD_CONSTANT . " On  fee groups feetype id " . $id;
+        $message   = INSERT_RECORD_CONSTANT . " On  fee groups additionalfeetype id " . $id;
         $action    = "Insert";
         $record_id = $id;
         $this->log($message, $record_id, $action);
@@ -42,12 +42,12 @@ class Additionalfeesessiongroup_model extends MY_Model
 
     public function getFeesByGroupByStudent($student_session_id)
     {
-        $this->db->select('fee_session_groups.*,fee_groups.name as `group_name`,IFNULL(student_fees_master.id,0) as `student_fees_master_id`');
-        $this->db->from('fee_session_groups');
-        $this->db->join('fee_groups', 'fee_groups.id = fee_session_groups.fee_groups_id');
-        $this->db->join('student_fees_master', 'student_fees_master.student_session_id=' . $student_session_id . ' and student_fees_master.fee_session_group_id=fee_session_groups.id', 'LEFT');
-        $this->db->where('fee_session_groups.session_id', $this->current_session);
-        $this->db->where('fee_groups.is_system', 0);
+        $this->db->select('additionalfee_session_groups.*,additionalfee_groups.name as `group_name`,IFNULL(student_fees_master.id,0) as `student_fees_master_id`');
+        $this->db->from('additionalfee_session_groups');
+        $this->db->join('additionalfee_groups', 'additionalfee_groups.id = additionalfee_session_groups.fee_groups_id');
+        $this->db->join('student_fees_master', 'student_fees_master.student_session_id=' . $student_session_id . ' and student_fees_master.fee_session_group_id=additionalfee_session_groups.id', 'LEFT');
+        $this->db->where('additionalfee_session_groups.session_id', $this->current_session);
+        $this->db->where('additionalfee_groups.is_system', 0);
         $this->db->order_by('student_fees_master_id', 'desc');
         $query  = $this->db->get();
         $result = $query->result();
@@ -59,20 +59,20 @@ class Additionalfeesessiongroup_model extends MY_Model
 
     public function getFeesByGroup($id = null,$display_system=NULL)
     {
-        $this->db->select('fee_session_groups.*,fee_groups.name as `group_name`,fee_groups.is_system');
-        $this->db->from('fee_session_groups');
-        $this->db->join('fee_groups', 'fee_groups.id = fee_session_groups.fee_groups_id');
-        $this->db->where('fee_session_groups.session_id', $this->current_session);
+        $this->db->select('additionalfee_session_groups.*,additionalfee_groups.name as `group_name`,additionalfee_groups.is_system');
+        $this->db->from('additionalfee_session_groups');
+        $this->db->join('additionalfee_groups', 'additionalfee_groups.id = additionalfee_session_groups.fee_groups_id');
+        $this->db->where('additionalfee_session_groups.session_id', $this->current_session);
 
          if ($display_system !== NULL) {
-               $this->db->where('fee_groups.is_system', $display_system);
+               $this->db->where('additionalfee_groups.is_system', $display_system);
         }
 
      
         if ($id != null) {
-            $this->db->where('fee_session_groups.id', $id);
+            $this->db->where('additionalfee_session_groups.id', $id);
         }
-            $this->db->order_by('fee_groups.id', 'asc');
+        $this->db->order_by('additionalfee_groups.id', 'asc');
         $query = $this->db->get();
         $result = $query->result();
         foreach ($result as $key => $value) {
@@ -83,12 +83,12 @@ class Additionalfeesessiongroup_model extends MY_Model
 
     public function getfeeTypeByGroup($fee_session_group_id, $id = null)
     {
-        $this->db->select('fee_groups_feetype.*,feetype.type,feetype.code');
-        $this->db->from('fee_groups_feetype');
-        $this->db->join('feetype', 'feetype.id=fee_groups_feetype.feetype_id');
-        $this->db->where('fee_groups_feetype.fee_groups_id', $id);
-        $this->db->where('fee_groups_feetype.fee_session_group_id', $fee_session_group_id);
-        $this->db->order_by('fee_groups_feetype.id', 'asc');
+        $this->db->select('additionalfee_groups_feetype.*,additionalfeetype.type,additionalfeetype.code');
+        $this->db->from('additionalfee_groups_feetype');
+        $this->db->join('additionalfeetype', 'additionalfeetype.id=additionalfee_groups_feetype.feetype_id');
+        $this->db->where('additionalfee_groups_feetype.fee_groups_id', $id);
+        $this->db->where('additionalfee_groups_feetype.fee_session_group_id', $fee_session_group_id);
+        $this->db->order_by('additionalfee_groups_feetype.id', 'asc');
         $query = $this->db->get();
         return $query->result();
     }
@@ -97,12 +97,12 @@ class Additionalfeesessiongroup_model extends MY_Model
     {
         $this->db->where('fee_groups_id', $fee_groups_id);
         $this->db->where('session_id', $this->current_session);
-        $query = $this->db->get('fee_session_groups');
+        $query = $this->db->get('additionalfee_session_groups');
         if ($query->num_rows() > 0) {
             return $query->row()->id;
         } else {
             $data = array('fee_groups_id' => $fee_groups_id, 'session_id' => $this->current_session);
-            $this->db->insert('fee_session_groups', $data);
+            $this->db->insert('additionalfee_session_groups', $data);
             return $this->db->insert_id();
         }
     }
@@ -112,10 +112,10 @@ class Additionalfeesessiongroup_model extends MY_Model
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
-        $sql = "delete fee_groups_feetype.* FROM fee_groups_feetype JOIN fee_session_groups ON fee_session_groups.id = fee_groups_feetype.fee_session_group_id WHERE fee_session_groups.id = ?";
+        $sql = "delete additionalfee_groups_feetype.* FROM additionalfee_groups_feetype JOIN additionalfee_session_groups ON additionalfee_session_groups.id = additionalfee_groups_feetype.fee_session_group_id WHERE additionalfee_session_groups.id = ?";
         $this->db->query($sql, array($id));
         $this->db->where('id', $id);
-        $this->db->delete('fee_session_groups');
+        $this->db->delete('additionalfee_session_groups');
 
         $message   = DELETE_RECORD_CONSTANT . " On fee session groups id " . $id;
         $action    = "Delete";
@@ -139,7 +139,7 @@ class Additionalfeesessiongroup_model extends MY_Model
         $this->db->where('fee_groups_id', $data['fee_groups_id']);
         $this->db->where('feetype_id', $data['feetype_id']);
         $this->db->where('session_id', $this->current_session);
-        $q = $this->db->get('fee_groups_feetype');
+        $q = $this->db->get('additionalfee_groups_feetype');
 
         if ($q->num_rows() > 0) {
             return $q->row()->id;
@@ -170,7 +170,7 @@ class Additionalfeesessiongroup_model extends MY_Model
     {
         $this->db->where('fee_groups_id', $fee_groups_id);
         $this->db->where('session_id', $this->current_session);
-        $query = $this->db->get('fee_session_groups');
+        $query = $this->db->get('additionalfee_session_groups');
 
         if ($query->num_rows() > 0) {
             $fee_session_group_id = $query->row()->id;
@@ -178,7 +178,7 @@ class Additionalfeesessiongroup_model extends MY_Model
             $this->db->where('fee_groups_id', $fee_groups_id);
             $this->db->where('feetype_id', $feetype_id);
             $this->db->where('id !=', $id);
-            $query = $this->db->get('fee_groups_feetype');
+            $query = $this->db->get('additionalfee_groups_feetype');
             if ($query->num_rows() > 0) {
                 return true;
             } else {

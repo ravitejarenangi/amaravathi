@@ -16,7 +16,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title"><?php echo $this->lang->line('edit_fees_master') . " : " . $this->setting_model->getCurrentSessionName(); ?></h3>
                         </div><!-- /.box-header -->
-                        <form id="form1" action="<?php echo site_url("admin/feemaster/edit/" . $feegroup_type->id) ?>"  id="feemasterform" name="feemasterform" method="post" accept-charset="utf-8">
+                        <form id="form1" action="<?php echo site_url("admin/additionalfeemaster/edit/" . $feegroup_type->id) ?>"  id="feemasterform" name="feemasterform" method="post" accept-charset="utf-8">
                             <div class="box-body">
                                 <?php if ($this->session->flashdata('msg')) { ?>
                                     <?php 
@@ -189,14 +189,14 @@
                                                                 echo $currency_symbol.amountFormat($feetype_value->amount); ?></div>
                                                                     <div class="col-md-3"> <?php if ($this->rbac->hasPrivilege('fees_master', 'can_edit')) {
                                                                  ?>
-                                                                    <a href="<?php echo base_url(); ?>admin/feemaster/edit/<?php echo $feetype_value->id ?>"   data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
+                                                                    <a href="<?php echo base_url(); ?>admin/additionalfeemaster/edit/<?php echo $feetype_value->id ?>"   data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
                                                                         <i class="fa fa-pencil"></i>
                                                                     </a>&nbsp;
                                                                     <?php
                                                                 }
                                                                 if ($this->rbac->hasPrivilege('fees_master', 'can_delete')) {
                                                                     ?>
-                                                                    <a href="<?php echo base_url(); ?>admin/feemaster/delete/<?php echo $feetype_value->id ?>" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                                    <a href="<?php echo base_url(); ?>admin/additionalfeemaster/delete/<?php echo $feetype_value->id ?>" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                                         <i class="fa fa-remove"></i>
                                                                     </a>
                                                                 <?php } ?></div>
@@ -212,13 +212,13 @@
                                                     </td>
                                                     <td class="mailbox-date pull-right">
                                                         <?php if ($this->rbac->hasPrivilege('fees_group_assign', 'can_view')) { ?>
-                                                            <a href="<?php echo base_url(); ?>admin/feemaster/assign/<?php echo $feegroup->id ?>" 
+                                                            <a href="<?php echo base_url(); ?>admin/additionalfeemaster/assign/<?php echo $feegroup->id ?>"
                                                                class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('assign_view_student'); ?>">
                                                                 <i class="fa fa-tag"></i>
                                                             </a>
                                                         <?php } ?>
                                                         <?php if ($this->rbac->hasPrivilege('fees_master', 'can_delete')) { ?>
-                                                            <a href="<?php echo base_url(); ?>admin/feemaster/deletegrp/<?php echo $feegroup->id ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                            <a href="<?php echo base_url(); ?>admin/additionalfeemaster/deletegrp/<?php echo $feegroup->id ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                                 <i class="fa fa-remove"></i>
                                                             </a>
                                                         <?php } ?>
