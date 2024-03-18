@@ -18,6 +18,15 @@ class Testt extends Admin_Controller
         $this->config->load('app-config');
         $this->config->load("payroll");
         
+        $this->load->library('smsgateway');
+        $this->load->library('mailsmsconf');
+        $this->load->library('customlib');
+        $this->load->library('encoding_lib');
+        $this->load->library('media_storage');
+
+        $this->load->model("student_model");
+        $this->load->model('test_model');
+        $this->load->model('setting_model');
         $this->load->model("classteacher_model");
         
         $this->load->model("student_model");
@@ -27,14 +36,8 @@ class Testt extends Admin_Controller
         $this->role;
         $this->staff_attendance = $this->config->item('staffattendance');
         
-        $this->load->library('smsgateway');
-        $this->load->library('mailsmsconf');
-        $this->load->library('customlib');
-        $this->load->library('encoding_lib');
-        $this->load->library('media_storage');
-        $this->load->model("student_model");
-        $this->load->model('test_model');
-        $this->load->model('setting_model');
+        
+        
         
 
         // $this->current_session = $this->setting_model->getCurrentSession();
@@ -255,19 +258,12 @@ class Testt extends Admin_Controller
             $this->load->view('layout/header', $data);
             $this->load->view('admin/test/import', $data);
             $this->load->view('layout/footer', $data);
-        } else {
+        } else { 
+            
+            
 
-            $student_categorize = 'class';
-            if ($student_categorize == 'class') {
-                $section = 0;
-            } else if ($student_categorize == 'section') {
+            
 
-                $section = $this->input->post('section_id');
-            }
-            $class_id   = $this->input->post('class_id');
-            $section_id = $this->input->post('section_id');
-
-            $session = $this->setting_model->getCurrentSession();
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
                 if ($ext == 'csv') {
@@ -281,28 +277,42 @@ class Testt extends Admin_Controller
 
                             $student_data[$i] = array();
                             $n                = 0;
+                            $hh =0;
+                            $class_id   = '';
+                            $section_id = '';
+                            // $session = $this->setting_model->getCurrentSession();
+                            $session = '';
                             foreach ($result[$i] as $key => $value) {
 
-                                $student_data[$i][$fields[$n]] = $this->encoding_lib->toUTF8($result[$i][$key]);
+                                if ($key === 'class') {
+                                    $class_id = $this->test_model->getclassid($this->encoding_lib->toUTF8($value));
+                                } elseif ($key === 'section') {
+                                    $section_id = $this->test_model->sectionid($this->encoding_lib->toUTF8($value));
+                                }elseif ($key === 'session'){
+                                    $session = $this->test_model->getsessionid($this->encoding_lib->toUTF8($value));
+                                }else{
 
-                                $student_data[$i]['is_active'] = 'yes';
+                                    $student_data[$i][$fields[$n]] = $this->encoding_lib->toUTF8($result[$i][$key]);
 
-                                if (date('Y-m-d', strtotime($result[$i]['date_of_birth'])) === $result[$i]['date_of_birth']) {
-                                    $student_data[$i]['dob'] = date('Y-m-d', strtotime($result[$i]['date_of_birth']));
-                                } else {
-                                    $student_data[$i]['dob'] = null;
-                                }
+                                    $student_data[$i]['is_active'] = 'yes';
 
-                                if (date('Y-m-d', strtotime($result[$i]['measurement_date'])) === $result[$i]['measurement_date']) {
-                                    $student_data[$i]['measurement_date'] = date('Y-m-d', strtotime($result[$i]['measurement_date']));
-                                } else {
-                                    $student_data[$i]['measurement_date'] = '';
-                                }
+                                    if (date('Y-m-d', strtotime($result[$i]['date_of_birth'])) === $result[$i]['date_of_birth']) {
+                                        $student_data[$i]['dob'] = date('Y-m-d', strtotime($result[$i]['date_of_birth']));
+                                    } else {
+                                        $student_data[$i]['dob'] = null;
+                                    }
 
-                                if (date('Y-m-d', strtotime($result[$i]['admission_date'])) === $result[$i]['admission_date']) {
-                                    $student_data[$i]['admission_date'] = date('Y-m-d', strtotime($result[$i]['admission_date']));
-                                } else {
-                                    $student_data[$i]['admission_date'] = null;
+                                    if (date('Y-m-d', strtotime($result[$i]['measurement_date'])) === $result[$i]['measurement_date']) {
+                                        $student_data[$i]['measurement_date'] = date('Y-m-d', strtotime($result[$i]['measurement_date']));
+                                    } else {
+                                        $student_data[$i]['measurement_date'] = '';
+                                    }
+
+                                    if (date('Y-m-d', strtotime($result[$i]['admission_date'])) === $result[$i]['admission_date']) {
+                                        $student_data[$i]['admission_date'] = date('Y-m-d', strtotime($result[$i]['admission_date']));
+                                    } else {
+                                        $student_data[$i]['admission_date'] = null;
+                                    }
                                 }
                                 $n++;
                             }
@@ -445,10 +455,9 @@ class Testt extends Admin_Controller
             $this->load->view('layout/footer', $data);
         } else { 
             
-            $class_id   = '';
-            $section_id = '';
+            
 
-            $session = $this->setting_model->getCurrentSession();
+            
 
             if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
@@ -464,13 +473,22 @@ class Testt extends Admin_Controller
                             $student_data[$i] = array();
                             $n                = 0;
                             $hh =0;
+
+                            $class_id   = '';
+                            $section_id = '';
+                            // $session = $this->setting_model->getCurrentSession();
+                            $session = '';
                             
                             foreach ($result[$i] as $key => $value) {
 
                                 if ($key === 'class') {
                                     $class_id = $this->test_model->getclassid($this->encoding_lib->toUTF8($value));
+                                    // $class_id = $this->encoding_lib->toUTF8($value);
                                 } elseif ($key === 'section') {
                                     $section_id = $this->test_model->sectionid($this->encoding_lib->toUTF8($value));
+                                    // $section_id = 1;
+                                } elseif ($key === 'session'){
+                                    $session = $this->test_model->getsessionid($this->encoding_lib->toUTF8($value));
                                 }else{
 
                                     $student_data[$i][$fields[$n]] = $this->encoding_lib->toUTF8($result[$i][$key]);

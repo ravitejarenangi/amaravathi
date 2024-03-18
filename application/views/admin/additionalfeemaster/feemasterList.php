@@ -56,6 +56,7 @@
                                             </select>
                                             <span class="text-danger"><?php echo form_error('fee_groups_id'); ?></span>
                                         </div>
+
                                         <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('fees_type'); ?></label><small class="req"> *</small>
                                             <select  id="feetype_id" name="feetype_id" class="form-control" >
@@ -76,17 +77,21 @@
                                             </select>
                                             <span class="text-danger"><?php echo form_error('feetype_id'); ?></span>
                                         </div>
-                                        <div class="form-group">
+
+                                        <!-- <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('due_date'); ?></label><small class="req" id="due_date_error"> </small>
                                             <input id="due_date" name="due_date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('due_date'); ?>" />
                                             <span class="text-danger"><?php echo form_error('due_date'); ?></span>
-                                        </div>
-                                        <div class="form-group">
+                                        </div> -->
+
+
+                                        <!-- <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('amount'); ?> (<?php echo $currency_symbol; ?>)</label><small class="req"> *</small>
                                             <input id="amount" name="amount" placeholder="" type="text" class="form-control"  value="<?php echo set_value('amount'); ?>" />
                                             <span class="text-danger"><?php echo form_error('amount'); ?></span>
-                                        </div>
-                                        <div class="col-sm-12">
+                                        </div> -->
+
+                                        <!-- <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label for="input-type"><?php echo $this->lang->line('fine_type'); ?></label>
                                                 <div id="input-type" class="row">
@@ -109,9 +114,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
+
+
+
                                     </div>
-                                    <div class="col-md-6">
+
+
+                                    <!-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('percentage') ?> (%)</label><small class="req"> *</small>
                                             <input id="fine_percentage" name="fine_percentage" placeholder="" type="text" class="form-control"  value="<?php echo set_value('fine_percentage'); ?>" />
@@ -124,7 +134,9 @@
                                             <input id="fine_amount" name="fine_amount" placeholder="" type="text" class="form-control"  value="<?php echo set_value('fine_amount'); ?>" />
                                             <span class="text-danger"><?php echo form_error('fine_amount'); ?></span>
                                         </div>
-                                    </div>
+                                    </div> -->
+
+
                                 </div>
                             </div><!-- /.box-body -->
                             <div class="box-footer">
@@ -160,9 +172,9 @@
                                                     <div class="col-md-6">
                                                         <?php echo $this->lang->line('fees_code'); ?>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <!-- <div class="col-md-6">
                                                         <?php echo $this->lang->line('amount'); ?>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </th>
                                             <th class="text-right noExport"><?php echo $this->lang->line('action'); ?></th>
@@ -188,25 +200,28 @@
                                                                       <?php 
 
 
-                                                                echo $feetype_value->type."(".$feetype_value->code.")"; ?></div>
+                                                                echo $feetype_value->type."(".$feetype_value->code.")"; ?>
+                                                                </div>
                                                                     <div class="col-md-3"> 
-                                                                     <?php 
-
-
-                                                                echo $currency_symbol.amountFormat($feetype_value->amount); ?></div>
-                                                                    <div class="col-md-3"> <?php if ($this->rbac->hasPrivilege('fees_master', 'can_edit')) {
-                                                                 ?>
-                                                                    <a href="<?php echo base_url(); ?>admin/additionalfeemaster/edit/<?php echo $feetype_value->id ?>"   data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                                        <i class="fa fa-pencil"></i>
-                                                                    </a>&nbsp;
-                                                                    <?php
-                                                                }
-                                                                if ($this->rbac->hasPrivilege('fees_master', 'can_delete')) {
-                                                                    ?>
-                                                                    <a href="<?php echo base_url(); ?>admin/additionalfeemaster/delete/<?php echo $feetype_value->id ?>" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                                        <i class="fa fa-remove"></i>
-                                                                    </a>
-                                                                <?php } ?></div>
+                                                                     
+                                                                     
+                                                                     
+                                                                            <!-- <?php 
+                                                                                echo $currency_symbol.amountFormat($feetype_value->amount); ?></div>
+                                                                                    <div class="col-md-3"> <?php if ($this->rbac->hasPrivilege('fees_master', 'can_edit')) {
+                                                                            ?> -->
+                                                                            <!-- <a href="<?php echo base_url(); ?>admin/additionalfeemaster/edit/<?php echo $feetype_value->id ?>"   data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
+                                                                                <i class="fa fa-pencil"></i>
+                                                                            </a>&nbsp; -->
+                                                                            <?php
+                                                                        }
+                                                                        if ($this->rbac->hasPrivilege('fees_master', 'can_delete')) {
+                                                                            ?>
+                                                                            <a href="<?php echo base_url(); ?>admin/additionalfeemaster/delete/<?php echo $feetype_value->id ?>" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                                                <i class="fa fa-remove"></i>
+                                                                            </a>
+                                                                        <?php } ?>
+                                                                    </div>
                                                                     
                                                                 </div>
                                                              

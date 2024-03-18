@@ -15,6 +15,7 @@ class Additionalfeemaster extends Admin_Controller
         $this->load->model('additionalfeetype_model');
         $this->load->model('additionalfeegroup_model');
         $this->load->model('additionalfeesessiongroup_model');
+        $this->load->model('additionalfeegrouptype_model');
         
     }
 
@@ -29,11 +30,12 @@ class Additionalfeemaster extends Admin_Controller
         $data['feegroupList'] = $feegroup;
         $feetype              = $this->additionalfeetype_model->get();
         $data['feetypeList']  = $feetype;
+
         $feegroup_result       = $this->additionalfeesessiongroup_model->getFeesByGroup(null,0);
         $data['feemasterList'] = $feegroup_result;
 
-        $this->form_validation->set_rules('feetype_id', $this->lang->line('fee_type'), 'required');
-        $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'required|numeric');
+        // $this->form_validation->set_rules('feetype_id', $this->lang->line('fee_type'), 'required');
+        // $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'required|numeric');
 
         $this->form_validation->set_rules(
             'fee_groups_id', $this->lang->line('fee_group'), array(
@@ -42,35 +44,31 @@ class Additionalfeemaster extends Admin_Controller
             )
         );
 
-        if (isset($_POST['account_type']) && $_POST['account_type'] == 'fix') {
-            $this->form_validation->set_rules('fine_amount', $this->lang->line('fix_amount'), 'required|numeric');
-            $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
+        // if (isset($_POST['account_type']) && $_POST['account_type'] == 'fix') {
+        //     $this->form_validation->set_rules('fine_amount', $this->lang->line('fix_amount'), 'required|numeric');
+        //     $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
 
-        } elseif (isset($_POST['account_type']) && ($_POST['account_type'] == 'percentage')) {
-            $this->form_validation->set_rules('fine_percentage', $this->lang->line('percentage'), 'required|numeric');
-            $this->form_validation->set_rules('fine_amount', $this->lang->line('fix_amount'), 'required|numeric');
-            $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
-        }
+        // } elseif (isset($_POST['account_type']) && ($_POST['account_type'] == 'percentage')) {
+        //     $this->form_validation->set_rules('fine_percentage', $this->lang->line('percentage'), 'required|numeric');
+        //     $this->form_validation->set_rules('fine_amount', $this->lang->line('fix_amount'), 'required|numeric');
+        //     $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
+        // }
 
         if ($this->form_validation->run() == false) {
 
         } else {
             
-            if($this->input->post('fine_amount')){
-                $fine_amount    =   convertCurrencyFormatToBaseAmount($this->input->post('fine_amount'));
-            }else{
-                $fine_amount    = '';
-            }
+            // if($this->input->post('fine_amount')){
+            //     $fine_amount    =   convertCurrencyFormatToBaseAmount($this->input->post('fine_amount'));
+            // }else{
+            //     $fine_amount    = '';
+            // }
             
             $insert_array = array(
                 'fee_groups_id'   => $this->input->post('fee_groups_id'),
                 'feetype_id'      => $this->input->post('feetype_id'),
-                'amount'          => convertCurrencyFormatToBaseAmount($this->input->post('amount')),
-                'due_date'        => $this->customlib->dateFormatToYYYYMMDD($this->input->post('due_date')),
                 'session_id'      => $this->setting_model->getCurrentSession(),
-                'fine_type'       => $this->input->post('account_type'),
-                'fine_percentage' => $this->input->post('fine_percentage'),
-                'fine_amount'     => $fine_amount,
+                
             );
 
             $feegroup_result = $this->additionalfeesessiongroup_model->add($insert_array);
@@ -89,7 +87,7 @@ class Additionalfeemaster extends Admin_Controller
 //             access_denied();
 //         }
         $data['title'] = $this->lang->line('fees_master_list');
-        $this->feegrouptype_model->remove($id);
+        $this->additionalfeegrouptype_model->remove($id);
         redirect('admin/additionalfeemaster/index');
     }
 
@@ -108,7 +106,7 @@ class Additionalfeemaster extends Admin_Controller
 //         $this->session->set_userdata('top_menu', 'Fees Collection');
 //         $this->session->set_userdata('sub_menu', 'admin/feemaster');
         $data['id']            = $id;
-        $feegroup_type         = $this->feegrouptype_model->get($id);
+        $feegroup_type         = $this->additionalfeegrouptype_model->get($id);
         $data['feegroup_type'] = $feegroup_type;
         $feegroup              = $this->additionalfeegroup_model->get();
         $data['feegroupList']  = $feegroup;
@@ -116,8 +114,8 @@ class Additionalfeemaster extends Admin_Controller
         $data['feetypeList']   = $feetype;
         $feegroup_result       = $this->additionalfeesessiongroup_model->getFeesByGroup(null,0);
         $data['feemasterList'] = $feegroup_result;
-        $this->form_validation->set_rules('feetype_id', $this->lang->line('fee_type'), 'required');
-        $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'required|numeric');
+        // $this->form_validation->set_rules('feetype_id', $this->lang->line('fee_type'), 'required');
+        // $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'required|numeric');
         $this->form_validation->set_rules(
             'fee_groups_id', $this->lang->line('fee_group'), array(
                 'required',
@@ -148,14 +146,10 @@ class Additionalfeemaster extends Admin_Controller
             $insert_array = array(
                 'id'              => $this->input->post('id'),
                 'feetype_id'      => $this->input->post('feetype_id'),
-                'due_date'        => $this->customlib->dateFormatToYYYYMMDD($this->input->post('due_date')),
-                'amount'          => convertCurrencyFormatToBaseAmount($this->input->post('amount')),
-                'fine_type'       => $this->input->post('account_type'),
-                'fine_percentage' => $this->input->post('fine_percentage'),
-                'fine_amount'     => $fine_amount,
+                
             );
 
-            $feegroup_result = $this->feegrouptype_model->add($insert_array);
+            $feegroup_result = $this->additionalfeegrouptype_model->add($insert_array);
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
             redirect('admin/additionalfeemaster/index');

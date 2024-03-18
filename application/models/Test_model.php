@@ -355,4 +355,23 @@ class Test_model extends MY_Model
         }
     }
 
+
+    public function getsessionid($name) {
+        $this->db->select('sessions.id'); // Select only the 'id' column
+        $this->db->from('sessions');
+        $this->db->where('sessions.session', $name);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->row()->id;
+        } else {
+            return null;
+        }
+    }
+
+
+
+
+
+    
+
 }

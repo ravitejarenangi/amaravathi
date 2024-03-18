@@ -187,6 +187,6 @@ class Additionalfeesessiongroup_model extends MY_Model
         } else {
             return false;
         }
-    }
+    }   
 
 }

@@ -105,6 +105,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             ?>
                                         <th><?php echo $add . "<span>" . $this->lang->line($value) . "</span>"; ?></th>
                                     <?php }?>
+                                    <th><span>class *<span></th>
+                                    <th><span>section *</span></th>
                                 </tr>
                             </thead>
                             <tbody>
